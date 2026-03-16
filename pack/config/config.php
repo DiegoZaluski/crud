@@ -15,7 +15,6 @@ $allowedDamains = [
 $allowedMethods = [
   'GET',
   'POST',
-  'PUT',
   'PATCH',
   'DELETE',
 ];

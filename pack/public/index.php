@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
 
 // Route. 
 $uri = strtok($_SERVER["REQUEST_URI"], "?");
-var_dump($uri);
+
 match ($uri) {
-  "/api/whitelist" => require_once __DIR__ . "/../core/routers.php",
-  default          => notFound(),
+  "/api/operations" => require_once __DIR__ . "/../core/routers.php",
+  default           => notFound(),
 };
 
 function notFound(): void {

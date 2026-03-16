@@ -4,7 +4,7 @@ function createTable():bool {
   return $conn->exec("
     CREATE TABLE IF NOT EXISTS whitelist (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    purposeName TEXT NOT NULL,
+    purposeName TEXT NOT NULL UNIQUE,
     whitelist TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )"); 

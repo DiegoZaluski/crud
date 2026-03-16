@@ -4,7 +4,10 @@ require_once "./data/DBOperations/create.php";
 require_once "./data/DBOperations/inserts.php";
 require_once "./data/DBOperations/querys.php";
 
-createTable();
-insert('newList', 'test test test test test test test test test');
-$q = (query(purposeName:'newList'));
-var_dump($q->fetchArray(SQLITE3_ASSOC)["whitelist"]);
+$q= queryAll();
+$i = 0;
+while($i < 7) {
+  var_dump($q->fetchArray(SQLITE3_ASSOC));
+  $i ++ ;
+}
+  

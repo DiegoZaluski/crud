@@ -1,11 +1,11 @@
 - [x] Create DB and operations sql.
-- [ ] Create function [get].
-- [ ] Create function [post].
-- [ ] Create function [put].
-- [ ] Create function [patch].
-- [ ] Create routers.
-- [ ] Create 
+- [x] Create function [get].
+- [x] Create function [post].
+- [x] Create function [put].
+- [x] Create function [patch].
+- [x] Create routers. 
 - [ ] Check for possibles attacks.
+
 # Estruct project 
 projeto/
 ├── data/

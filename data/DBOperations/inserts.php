@@ -1,8 +1,10 @@
 <?php 
-function insertStream(array $arrayDatas):bool {
+function insertStream(array $arrayDatas): bool {
   /**
    * @param array $arrayDatas: List of arrays with purposeName and whitelist.
    * @return bool: Returns false if the array is empty, any query failed and true if all inserts were successful.
+   * 
+   * @global $conn dependence intacie of SQLite3.
   */
   global $conn;
 

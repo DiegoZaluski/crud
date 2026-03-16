@@ -3,9 +3,12 @@ function query(
   int|null $id             = null, 
   string|null $purposeName = null): bool|SQLite3Result {
   /**
-   * @param int|null $id: If omitted the $purposeName will be used to perform the query.
+   * @param int|null    $id: If omitted the $purposeName will be used to perform the query.
    * @param string|null $purposeName: Used when id omitted.
-   * @return bool|SQLite3Result: Returns false, if both parameters were omitted or the query failed.
+   * 
+   * @return bool|SQLite3Result Returns false, if both parameters were omitted or the query failed.
+   * 
+   * @global $conn dependence intacie of SQLite3.
   */
 
   if (!$id && !$purposeName) return false;
