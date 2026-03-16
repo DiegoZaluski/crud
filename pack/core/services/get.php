@@ -4,11 +4,9 @@ require_once __DIR__ . "/../../../data/DBOperations/querys.php";
 
 function fetchByKey(string $key): void {
   /**
-   * Fetch whitelist by given key (id or purposeName).
+   * @param string $key: Key to fetch data (id or name).
    *
-   * @param string $key: Key to fetch whitelist (id or purposeName).
-   *
-   * @return void: Returns whitelist associated with given key.
+   * @return void: Returns data associated with given key.
    *
    * @throws json_encode        of error message if key is not found.
    * @throws http_response_code of 400 if key is not found.
@@ -29,15 +27,14 @@ function fetchByKey(string $key): void {
     return;
   }
 
-  echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC)["whitelist"]);
+  echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
   http_response_code(200);
 }
 
 function getAll(): void {
   /**
-   * Fetch all whitelists in the database.
    *
-   * @return void: Returns all whitelists in the database.
+   * @return void: Returns all consults in the database.
    *
    * @throws json_encode of error message if query failed.
    * @throws http_response_code of 500 if query failed.
@@ -58,11 +55,7 @@ function getAll(): void {
 
 function get(): void {
   /**
-   * Fetch whitelist by given key (id or purposeName) or all whitelists.
-   *
-   * If id or purposeName is not found, it will fetch all whitelists.
-   *
-   * @return void: Returns whitelist associated with given key or all whitelists.
+   * @return void: Returns data associated with given key or all names.
    *
    * @throws json_encode of error message if key is not found.
    * @throws http_response_code of 400 if key is not found.
@@ -71,11 +64,11 @@ function get(): void {
    */
   
   global $conn;
-  if (!isset($_GET["id"]) && !isset($_GET["purposeName"])) {
+  if (!isset($_GET["id"]) && !isset($_GET["name"])) {
     getAll();
     return;
   }
 
-  $key = isset($_GET["id"]) ? "id" : "purposeName";
+  $key = isset($_GET["id"]) ? "id" : "name";
   fetchByKey($key);
 }

@@ -1,18 +1,15 @@
-<?php 
-const ALLOWED_COLUMNS     = ["purposeName", "whitelist"];
-const ALLOWED_IDENTIFIERS = ["id","purposeName"];
-const MAX_VALUES_UPDATE   = 2;
-
+<?php    
 function update(array $atualizations, string $identifier, int|string $value): bool|array {
   /**
-   * Updates a whitelist based on the given identifier and value.
-   *
    * @param array      $atualizations An associative array containing the column names as keys and the new values as values.
-   * @param string     $identifier The identifier to update the whitelist with. Can be either "id" or "purposeName".
+   * @param string     $identifier The identifier to update the row with. Can be either "id" or "purposeName".
    * @param int|string $value The value associated with the identifier.
    * @return bool|array Returns true if the update was successful, or an associative array containing the index of the failed update and the error message if the update failed.
    * 
    * @global $conn dependence intacie of SQLite3.
+   * @global ALLOWED_IDENTIFIERS
+   * @global MAX_VALUES_UPDATE
+   * @global NAME_TABLE
    */
   
 
@@ -21,7 +18,7 @@ function update(array $atualizations, string $identifier, int|string $value): bo
   if (!$atualizations) return false;
   if (!in_array($identifier, ALLOWED_IDENTIFIERS)) return false;
   
-  $updateString = "UPDATE whitelist SET %s = ? WHERE %s = ?";
+  $updateString = "UPDATE " . NAME_TABLE . " SET %s = ? WHERE %s = ?";
   $conn->exec("BEGIN");
   
   $indexLoop        = 0;

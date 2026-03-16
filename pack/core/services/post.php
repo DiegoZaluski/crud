@@ -8,7 +8,7 @@ function post(): void{
    *
    * The request body must contain a JSON object with the following structure:
    * {
-   *   "purposeName": string,
+   *   "name": string,
    *   "whitelist": string
    * }
    *
@@ -38,19 +38,13 @@ function post(): void{
 
   $data = json_decode($boby, true);
 
-  if (isset($data["arrayLists"]) && !insertStream($data["arrayLists"])) { 
-    echo json_encode(["error" => "Error on insertStream"]);
-    http_response_code(500);
-    return;
-  }
-
-  if (!isset($data["purposeName"]) || !isset($data["whitelist"])) {
-    echo json_encode(["error" => "purposeName or whitelist not found"]);
+  if (!isset($data["name"]) || !isset($data["age"]) || !isset($data["description"])) {
+    echo json_encode(["error" => "name or age or description not found"]);
     http_response_code(400);
     return;
   }
-
-  $insert = insert($data["purposeName"], $data["whitelist"]);
+  
+  $insert = insert($data["name"], $data["age"], $data["description"]);
   
   if (!$insert) {
     echo json_encode(["error" => "Error on insert"]);

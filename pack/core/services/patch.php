@@ -2,16 +2,8 @@
 require_once __DIR__ . "/../../../data/DBOperations/updates.php";
 
 /**
- * Updates a whitelist based on the given identifier and value.
- *
- * If the id or purposeName is not found, it will return an error.
- *
- * If the update failed, it will return an error.
- *
- * If the update was successful, it will return a success message.
- * 
- * @throws json_encode        of error message if id or purposeName is not found.
- * @throws http_response_code of 400 if id or purposeName is not found.
+ * @throws json_encode        of error message if id or name is not found.
+ * @throws http_response_code of 400 if id or name is not found.
  * @throws json_encode        of error message if update failed.
  * @throws http_response_code of 500 if update failed.
  * @throws json_encode        of success message if update was successful.
@@ -24,9 +16,9 @@ function patch(): void {
   global $conn;
   $value = isset($_GET["id"]) 
     ? $_GET["id"] 
-    : (isset($_GET["purposeName"]) ? $_GET["purposeName"] : null);
+    : (isset($_GET["name"]) ? $_GET["name"] : null);
 
-  $identifier = isset($_GET["id"]) ? "id" : "purposeName";
+  $identifier = isset($_GET["id"]) ? "id" : "name";
   
   if (!$value) {
     echo json_encode(["error" => "id not found"]);
@@ -36,8 +28,13 @@ function patch(): void {
 
   $body       = file_get_contents("php://input");
   $body_patch = json_decode($body, true);
-
-  if (!$_GET["id"] && !$_GET["purposeName"]) {
+  if (!$body_patch) {
+    echo json_encode(["error" => "body not found"]);
+    http_response_code(400);
+    return;
+  }
+  
+  if (!$_GET["id"] && !$_GET["name"]) {
     echo json_encode(["error" => "id not found"]);
     http_response_code(400);
     return;

@@ -1,6 +1,6 @@
 <?php 
 require_once __DIR__ . "/../config/config.php";
-
+require_once __DIR__ . "/../config/constants.php";
 // CORS.
 $method = $_SERVER["REQUEST_METHOD"] ?? false;
 $origin = $_SERVER["HTTP_ORIGIN"]    ?? false;

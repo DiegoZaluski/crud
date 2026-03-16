@@ -2,8 +2,8 @@
 function deleteRegistration($identifierValue): bool {
   global $conn; 
   
-  $dropString ="DELETE FROM whitelist WHERE %s = ?";
-  $identifier = is_numeric($identifierValue) ? "id" : "purposeName";
+  $dropString ="DELETE FROM " . NAME_TABLE . " WHERE %s = ?";
+  $identifier = is_numeric($identifierValue) ? "id" : "name";
   
   $conn->exec("BEGIN");
 

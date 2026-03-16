@@ -1,27 +1,28 @@
 <?php 
+
 function query(
   int|null $id             = null, 
-  string|null $purposeName = null): bool|SQLite3Result {
+  string|null $name = null): bool|SQLite3Result {
   /**
-   * @param int|null    $id: If omitted the $purposeName will be used to perform the query.
-   * @param string|null $purposeName: Used when id omitted.
+   * @param int|null    $id: If omitted the $name will be used to perform the query.
+   * @param string|null $name: Used when id omitted.
    * 
    * @return bool|SQLite3Result Returns false, if both parameters were omitted or the query failed.
    * 
    * @global $conn dependence intacie of SQLite3.
   */
 
-  if (!$id && !$purposeName) return false;
+  if (!$id && !$name) return false;
   
   global $conn;
-  $selectString = "SELECT * FROM whitelist WHERE %s = ?";
+  $selectString = "SELECT * FROM ". NAME_TABLE . " WHERE %s = ?";
   
   if ($id) {
     $statement = $conn->prepare(sprintf($selectString, "id"));
     $statement->bindValue(1, $id, SQLITE3_INTEGER);
   } else {
-    $statement = $conn->prepare(sprintf($selectString, "purposeName"));
-    $statement->bindValue(1, $purposeName, SQLITE3_TEXT);
+    $statement = $conn->prepare(sprintf($selectString, "name"));
+    $statement->bindValue(1, $name, SQLITE3_TEXT);
   }
   
   return $statement->execute();
@@ -29,5 +30,5 @@ function query(
 
 function queryAll(): bool|SQLite3Result {
   global $conn;
-  return $conn->query("SELECT * FROM whitelist");
+  return $conn->query("SELECT * FROM ". NAME_TABLE);
 }

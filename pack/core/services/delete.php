@@ -6,7 +6,7 @@ require_once __DIR__ . "/../../../data/DBOperations/deleteRegistration.php";
 function delete(): void {
   global $conn;
 
-  $idValue = isset($_GET["id"]) ? $_GET["id"] : $_GET["purposeName"];
+  $idValue = isset($_GET["id"]) ? $_GET["id"] : $_GET["name"];
 
   if (!$idValue) {
     http_response_code(400);

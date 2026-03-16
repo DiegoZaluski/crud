@@ -2,10 +2,11 @@
 function createTable():bool {
   global $conn;
   return $conn->exec("
-    CREATE TABLE IF NOT EXISTS whitelist (
+    CREATE TABLE IF NOT EXISTS user(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    purposeName TEXT NOT NULL UNIQUE,
-    whitelist TEXT NOT NULL,
+    name TEXT NOT NULL,
+    age integer NOT NULL,
+    description TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )"); 
 }
