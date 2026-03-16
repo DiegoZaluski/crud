@@ -1,5 +1,4 @@
 <?php 
-
 require_once "./data/DBOperations/db.php";// $conn [GLOBAL].
 require_once "./data/DBOperations/inserts.php";
 

@@ -1,2 +1,2 @@
 <?php 
-$conn = new SQLite3("./data/data.db"); 
+$conn = new SQLite3(__DIR__ . "/../data.db");

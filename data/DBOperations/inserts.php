@@ -1,5 +1,4 @@
 <?php 
-// Isert data from a data array.  
 function insertStream(array $arrayDatas):bool {
   /**
    * @param array $arrayDatas: List of arrays with purposeName and whitelist.

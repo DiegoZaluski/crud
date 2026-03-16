@@ -1,15 +1,9 @@
 <?php
+require_once __DIR__ . "/../../../data/DBOperations/db.php";
+require_once __DIR__ . "/../../../data/DBOperations/querys.php";
 
-require_once "./data/DBOperations/db.php";// $conn [GLOBAL].
-require_once "./data/DBOperations/querys.php";
-
-function controller(string|null $key): void {
-  global $conn;// Used by query
-  if (!$key) {
-    echo json_encode(["error" => "key not found"]);
-    http_response_code(400);
-    return;
-  }
+function fetchByKey(string $key): void {
+  global $conn;
 
   if (!isset($_GET[$key])) {
     echo json_encode(["error" => "id not found"]);
@@ -29,20 +23,9 @@ function controller(string|null $key): void {
   http_response_code(200);
 }
 
-function getWhitelist():void {
-  global $conn;// Used by controller 
-  if (!isset($_GET["id"] ) && !isset($_GET["purposeName"])) {
-    echo json_encode(["error" => "id or purposeName not found"]);
-    http_response_code(400);
-    return;
-  }
+function getAll(): void {
+  global $conn;
 
-  controller("id");
-  controller("purposeName");
-}
-
-function getAll() {
-  global $conn;// Used by queryAll
   $getQuery = queryAll();
 
   if (!$getQuery) {
@@ -50,6 +33,18 @@ function getAll() {
     http_response_code(500);
     return;
   }
+
   echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
-  http_response_code(200); 
+  http_response_code(200);
+}
+
+function get(): void {
+  global $conn;
+  if (!isset($_GET["id"]) && !isset($_GET["purposeName"])) {
+    getAll();
+    return;
+  }
+
+  $key = isset($_GET["id"]) ? "id" : "purposeName";
+  fetchByKey($key);
 }

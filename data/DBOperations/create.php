@@ -1,5 +1,4 @@
 <?php
-
 function createTable():bool {
   global $conn;
   return $conn->exec("
