@@ -16,9 +16,9 @@ function patch(): void {
   global $conn;
   $value = isset($_GET["id"]) 
     ? $_GET["id"] 
-    : (isset($_GET["name"]) ? $_GET["name"] : null);
+    : (isset($_GET["email"]) ? $_GET["email"] : null);
 
-  $identifier = isset($_GET["id"]) ? "id" : "name";
+  $identifier = isset($_GET["id"]) ? "id" : "email";
   
   if (!$value) {
     echo json_encode(["error" => "id not found"]);
@@ -34,7 +34,7 @@ function patch(): void {
     return;
   }
   
-  if (!$_GET["id"] && !$_GET["name"]) {
+  if (!$_GET["id"] && !$_GET["email"]) {
     echo json_encode(["error" => "id not found"]);
     http_response_code(400);
     return;

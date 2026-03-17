@@ -6,7 +6,7 @@ function createTable():bool {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     age integer NOT NULL,
-    description TEXT NOT NULL,
+    email TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )"); 
 }

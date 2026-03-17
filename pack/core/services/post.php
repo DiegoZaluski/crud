@@ -38,13 +38,30 @@ function post(): void{
 
   $data = json_decode($boby, true);
 
-  if (!isset($data["name"]) || !isset($data["age"]) || !isset($data["description"])) {
+  if (!isset($data["name"]) || !isset($data["age"]) || !isset($data["email"])) {
     echo json_encode(["error" => "name or age or description not found"]);
     http_response_code(400);
     return;
   }
-  
-  $insert = insert($data["name"], $data["age"], $data["description"]);
+
+  if (!is_string($data["name"])) {
+    echo json_encode(["error" => "name must string"]);
+    http_response_code(400);
+    return; 
+  }
+
+  if (!is_numeric($data["age"])) {
+    echo json_encode(["error" => "age must number"]);
+    http_response_code(400);
+    return; 
+  }
+
+  if (!is_string($data["email"])) {
+    echo json_encode(["error" => "email must string"]);
+    http_response_code(400);
+    return; 
+  }
+  $insert = insert($data["name"], $data["age"], $data["email"]);
   
   if (!$insert) {
     echo json_encode(["error" => "Error on insert"]);

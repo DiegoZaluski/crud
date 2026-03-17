@@ -48,8 +48,9 @@ function getAll(): bool {
     http_response_code(500);
     return false;
   }
-
-  echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
+  
+  // echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
+  // echo json_encode($getQuery->fetchAll(SQLITE3_ASSOC));
   http_response_code(200);
   return true;
 }
@@ -70,6 +71,7 @@ function get(): void {
     return;
   }
 
-  $key = isset($_GET["id"]) ? "id" : "name";
+  $key = isset($_GET["id"]) // test 
+    ? "id" : (isset($_GET["email"])? "email" : "name");
   fetchByKey($key);
 }
