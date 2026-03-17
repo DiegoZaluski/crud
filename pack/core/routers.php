@@ -4,14 +4,6 @@ require_once __DIR__ . "/services/post.php";
 require_once __DIR__ . "/services/patch.php";
 require_once __DIR__ . "/services/delete.php";
 
-$queryParams = $_SERVER["QUERY_STRING"] ?? false;
-
-if (!$queryParams) {
-  http_response_code(404);
-  echo json_encode(["error" => "Route not found"]);
-  exit;
-} 
-
 $method = $_SERVER["REQUEST_METHOD"] ?? false;
 if (!$method) {
   http_response_code(404);

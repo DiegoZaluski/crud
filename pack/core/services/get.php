@@ -31,7 +31,7 @@ function fetchByKey(string $key): void {
   http_response_code(200);
 }
 
-function getAll(): void {
+function getAll(): bool {
   /**
    *
    * @return void: Returns all consults in the database.
@@ -46,11 +46,12 @@ function getAll(): void {
   if (!$getQuery) {
     error_log("[SERVICES][GET] Error on query");
     http_response_code(500);
-    return;
+    return false;
   }
 
   echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
   http_response_code(200);
+  return true;
 }
 
 function get(): void {
@@ -65,7 +66,7 @@ function get(): void {
   
   global $conn;
   if (!isset($_GET["id"]) && !isset($_GET["name"])) {
-    getAll();
+    if (!getAll()) http_response_code(500);
     return;
   }
 

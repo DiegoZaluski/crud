@@ -5,10 +5,9 @@ require_once __DIR__ . "/../config/constants.php";
 $method = $_SERVER["REQUEST_METHOD"] ?? false;
 $origin = $_SERVER["HTTP_ORIGIN"]    ?? false;
 $damain = $_SERVER["HTTP_HOST"]      ?? false;
-
 // Headers.
 in_array($origin, $allowedOrigins) 
-  ? header("Access-Control-Allow-Origin:".implode(", ", $allowedOrigins)) 
+  ? header("Access-Control-Allow-Origin: $origin")
   : null; 
 header("Access-Control-Allow-Methods:" . implode(", ", $allowedMethods));
 header("Access-Control-Allow-Headers:" . implode(", ", $allowedHeaders));

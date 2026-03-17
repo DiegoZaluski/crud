@@ -1,0 +1,388 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CRUD Users API",
+    "version": "0.0.1",
+    "description": "API for manage users"
+  },
+
+  "servers": [
+    { "url": "http://localhost:8000" }
+  ],
+
+  "tags": [
+    {
+      "name": "Users",
+      "description": "User management operations"
+    }
+  ],
+
+  "paths": {
+    "/api/operations": {
+
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all users or fetch by key",
+        "operationId": "getUsers",
+        "description": "Returns all users if no parameter is provided. If 'id' or 'name' is given, returns the matching user.",
+        "parameters": [
+          { "$ref": "#/components/parameters/IdQuery" },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "description": "Fetch user by name",
+            "example": "diego",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User(s) returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/User" },
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/User" }
+                    }
+                  ]
+                },
+                "examples": {
+                  "singleUser": {
+                    "summary": "Single user returned by id or name",
+                    "value": {
+                      "id": 1,
+                      "name": "diego",
+                      "age": 21,
+                      "description": "I'm software engineer!"
+                    }
+                  },
+                  "allUsers": {
+                    "summary": "All users returned",
+                    "value": [
+                      { "id": 1, "name": "diego", "age": 21, "description": "I'm software engineer!" },
+                      { "id": 2, "name": "maria", "age": 25, "description": "Designer" }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a new user",
+        "operationId": "createUser",
+        "description": "Creates a new user with the provided data.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserInput" },
+              "example": {
+                "name": "diego",
+                "age": 21,
+                "description": "I'm software engineer!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" },
+                "example": {
+                  "id": 1,
+                  "name": "diego",
+                  "age": 21,
+                  "description": "I'm software engineer!"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "missingFields": {
+                    "summary": "Missing required fields",
+                    "value": { "error": "name, age, description are required" }
+                  },
+                  "bodyNotFound": {
+                    "summary": "Body not provided",
+                    "value": { "error": "body not found" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Partially update a user",
+        "operationId": "updateUser",
+        "description": "Updates only the fields provided inside 'atualizations'. Requires the user id as query param.",
+        "parameters": [
+          { "$ref": "#/components/parameters/IdQueryRequired" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserPatch" },
+              "example": {
+                "atualizations": {
+                  "age": 22
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" },
+                "example": {
+                  "id": 1,
+                  "name": "diego",
+                  "age": 22,
+                  "description": "I'm software engineer!"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": {
+                  "bodyNotFound": {
+                    "summary": "Body not provided",
+                    "value": { "error": "body not found" }
+                  },
+                  "missingId": {
+                    "summary": "Missing id param",
+                    "value": { "error": "User id is required" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/UserNotFound" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      },
+
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete a user",
+        "operationId": "deleteUser",
+        "description": "Deletes the user with the given id and returns the deleted record.",
+        "parameters": [
+          { "$ref": "#/components/parameters/IdQueryRequired" }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": { "$ref": "#/components/schemas/User" }
+                  }
+                },
+                "example": {
+                  "deleted": {
+                    "id": 1,
+                    "name": "diego",
+                    "age": 21,
+                    "description": "I'm software engineer!"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing id query parameter",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "example": { "error": "User id is required" }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/UserNotFound" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+
+    }
+  },
+
+  "components": {
+
+    "schemas": {
+
+      "User": {
+        "type": "object",
+        "description": "Full user model returned by the API",
+        "required": ["id", "name", "age", "description"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true,
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "diego"
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 150,
+            "example": 21
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "I'm software engineer!"
+          }
+        }
+      },
+
+      "UserInput": {
+        "type": "object",
+        "description": "Request body for creating a new user",
+        "required": ["name", "age", "description"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "diego"
+          },
+          "age": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 150,
+            "example": 21
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500,
+            "example": "I'm software engineer!"
+          }
+        }
+      },
+
+      "UserPatch": {
+        "type": "object",
+        "description": "Request body for partially updating a user — all fields inside atualizations are optional",
+        "properties": {
+          "atualizations": {
+            "type": "object",
+            "description": "Fields to update — send only what you want to change",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "age": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 150
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 500
+              }
+            }
+          }
+        }
+      },
+
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "An error occurred"
+          }
+        }
+      }
+
+    },
+
+    "parameters": {
+
+      "IdQuery": {
+        "name": "id",
+        "in": "query",
+        "required": false,
+        "description": "User ID (optional — omit to return all users)",
+        "example": 1,
+        "schema": {
+          "type": "integer"
+        }
+      },
+
+      "IdQueryRequired": {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "description": "Unique user ID",
+        "example": 1,
+        "schema": {
+          "type": "integer"
+        }
+      }
+
+    },
+
+    "responses": {
+
+      "UserNotFound": {
+        "description": "User not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": "User not found" }
+          }
+        }
+      },
+
+      "InternalError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": "Internal server error" }
+          }
+        }
+      }
+
+    }
+
+  }
+}
