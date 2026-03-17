@@ -1,6 +1,7 @@
 <?php 
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../config/constants.php";
+
 // CORS.
 $method = $_SERVER["REQUEST_METHOD"] ?? false;
 $origin = $_SERVER["HTTP_ORIGIN"]    ?? false;
@@ -12,11 +13,18 @@ in_array($origin, $allowedOrigins)
 header("Access-Control-Allow-Methods:" . implode(", ", $allowedMethods));
 header("Access-Control-Allow-Headers:" . implode(", ", $allowedHeaders));
 
+// Detected bot-agent.
+
+
+
 // Preflight.
 if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
   http_response_code(204);
   exit;
 }
+// Valid password from acess.
+
+
 
 // Route. 
 $uri = strtok($_SERVER["REQUEST_URI"], "?");
@@ -31,4 +39,6 @@ function notFound(): void {
   echo json_encode(["error" => "Route not found"]);
   exit;
 }
+
+
 
