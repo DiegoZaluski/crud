@@ -72,9 +72,13 @@ recordlist/
 All endpoints use the route `/api/operations`.
  
 ![GET](https://img.shields.io/badge/GET-3b82f6?style=flat-square&logoColor=white) `/api/operations` — List all users
+
 ![GET](https://img.shields.io/badge/GET-3b82f6?style=flat-square&logoColor=white) `/api/operations?id=1` or `?name=diego` — Find user by id or name
+
 ![POST](https://img.shields.io/badge/POST-22c55e?style=flat-square&logoColor=white) `/api/operations` — Create a new user
+
 ![PATCH](https://img.shields.io/badge/PATCH-f59e0b?style=flat-square&logoColor=white) `/api/operations?id=1` — Partially update a user
+
 ![DELETE](https://img.shields.io/badge/DELETE-ef4444?style=flat-square&logoColor=white) `/api/operations?id=1` — Delete a user
 ### Examples
 
