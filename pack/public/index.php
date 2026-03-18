@@ -2,6 +2,13 @@
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../config/constants.php";
 
+if (php_sapi_name() === 'cli-server') {
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_file(__DIR__ . $path)) {
+        return false; 
+    }
+}
+
 // CORS.
 $method = $_SERVER["REQUEST_METHOD"] ?? false;
 $origin = $_SERVER["HTTP_ORIGIN"]    ?? false;

@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CRUD Users API",
+    "description": "API para gerenciamento de usuários conforme especificação do frontend vanilla JS.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Servidor de Desenvolvimento Local"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "name": { "type": "string", "example": "Ana" },
+          "age": { "type": "integer", "example": 25 },
+          "email": { "type": "string", "example": "ana@email.com" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "Descrição do erro" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/users": {
+      "get": {
+        "summary": "Listar usuários",
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/User" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "age", "email"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "age": { "type": "integer" },
+                  "email": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } }
+          },
+          "400": {
+            "description": "Erro de validação",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar usuário (Total)",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "age": { "type": "integer" }, "email": { "type": "string" } } } } }
+        },
+        "responses": {
+          "200": { "description": "Usuário atualizado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "404": { "description": "Não encontrado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      },
+      "patch": {
+        "summary": "Atualizar usuário (Parcial)",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "age": { "type": "integer" }, "email": { "type": "string" } } } } }
+        },
+        "responses": {
+          "200": { "description": "Usuário atualizado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "404": { "description": "Não encontrado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      },
+      "delete": {
+        "summary": "Deletar usuário",
+        "parameters": [
+          { "name": "id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Usuário deletado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string", "example": "User deleted" } } } } } },
+          "404": { "description": "Não encontrado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    }
+  }
+}
