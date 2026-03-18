@@ -14,16 +14,12 @@ The goal is to explore REST API design, HTTP routing, and front-end integration 
 
 - **PHP 8.5+** — built-in server
 - **SQLite3** — bundled with PHP
-- **Live Server** *(optional)* — for the frontend
 
 ### 2. Running
-
 ```bash
 # Start the API server
 php -S localhost:8000 pack/public/index.php
 ```
-
-Then open `web/index.html` with Live Server at `http://localhost:5500`.
 
 > [!TIP]
 > Add `"liveServer.settings.ignoreFiles": ["**/*.db"]` to VSCode's `settings.json` to prevent the page from reloading on every database write.
@@ -31,9 +27,8 @@ Then open `web/index.html` with Live Server at `http://localhost:5500`.
 ---
 
 ## 📁 Project Structure
-
 ```text
-recordlist/
+crud/
 ├── data/
 │   ├── data.db                    # SQLite3 database
 │   └── DBOperations/
@@ -46,7 +41,7 @@ recordlist/
 ├── pack/
 │   ├── config/
 │   │   ├── config.php             # CORS and allowed origins
-│   │   └── constants.php          # application constants
+│   │   └── constants.php         # application constants
 │   ├── core/
 │   │   ├── routers.php            # HTTP method routing
 │   │   └── services/
@@ -55,51 +50,52 @@ recordlist/
 │   │       ├── patch.php
 │   │       ├── delete.php
 │   │       └── util/
+│   │           └── validations.php
 │   └── public/
-│       └── index.php              # front controller
-├── web/
-│   ├── index.html
-│   ├── style.css
-│   ├── api.js
-│   └── app.js
+│       ├── index.php              # front controller
+│       ├── docs.php               # API docs
+│       └── openapi.json
+├── compose.yaml
+├── Dockerfile
 └── openapi.json
 ```
 
 ---
 
 ## 🔌 Endpoints
- 
-All endpoints use the route `/api/operations`.
- 
-![GET](https://img.shields.io/badge/GET-3b82f6?style=flat-square&logoColor=white) `/api/operations` — List all users
 
-![GET](https://img.shields.io/badge/GET-3b82f6?style=flat-square&logoColor=white) `/api/operations?id=1` or `?name=diego` — Find user by id or name
+All endpoints use the route `/api/users`.
 
-![POST](https://img.shields.io/badge/POST-22c55e?style=flat-square&logoColor=white) `/api/operations` — Create a new user
+![GET](https://img.shields.io/badge/GET-3b82f6?style=flat-square&logoColor=white) `/api/users` — List all users
 
-![PATCH](https://img.shields.io/badge/PATCH-f59e0b?style=flat-square&logoColor=white) `/api/operations?id=1` — Partially update a user
+![POST](https://img.shields.io/badge/POST-22c55e?style=flat-square&logoColor=white) `/api/users` — Create a new user
 
-![DELETE](https://img.shields.io/badge/DELETE-ef4444?style=flat-square&logoColor=white) `/api/operations?id=1` — Delete a user
+![PUT](https://img.shields.io/badge/PUT-8b5cf6?style=flat-square&logoColor=white) `/api/users?id=1` — Full update of a user
+
+![PATCH](https://img.shields.io/badge/PATCH-f59e0b?style=flat-square&logoColor=white) `/api/users?id=1` — Partially update a user
+
+![DELETE](https://img.shields.io/badge/DELETE-ef4444?style=flat-square&logoColor=white) `/api/users?id=1` — Delete a user
+
 ### Examples
-
 ```bash
 # list all
-curl http://localhost:8000/api/operations
-
-# find by id
-curl http://localhost:8000/api/operations?id=1
+curl http://localhost:8000/api/users
 
 # create
-curl -X POST http://localhost:8000/api/operations \
+curl -X POST http://localhost:8000/api/users \
   -H "Content-Type: application/json" \
-  -d '{"name":"diego","age":21,"description":"Software engineer"}'
+  -d '{"name":"diego","age":21,"email":"diego@email.com"}'
 
-# update
-curl -X PATCH "http://localhost:8000/api/operations?id=1" \
+# full update
+curl -X PUT "http://localhost:8000/api/users?id=1" \
   -H "Content-Type: application/json" \
-  -d '{"atualizations":{"age":22}}'
+  -d '{"name":"diego silva","age":22,"email":"diego.silva@email.com"}'
+
+# partial update
+curl -X PATCH "http://localhost:8000/api/users?id=1" \
+  -H "Content-Type: application/json" \
+  -d '{"age":22}'
 
 # delete
-curl -X DELETE "http://localhost:8000/api/operations?id=1"
+curl -X DELETE "http://localhost:8000/api/users?id=1"
 ```
- 
