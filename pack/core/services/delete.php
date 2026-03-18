@@ -1,10 +1,12 @@
 <?php 
 require_once __DIR__ .  "/../../../data/DBOperations/db.php";
 require_once __DIR__ . "/../../../data/DBOperations/deleteRegistration.php";
-
+require_once __DIR__ . "/util/validations.php";
 
 function delete(): void {
   global $conn;
+
+  header('Content-Type: application/json');
 
   $idValue = isset($_GET["id"]) ? $_GET["id"] : $_GET["email"];
 
@@ -21,5 +23,5 @@ function delete(): void {
   }
 
   http_response_code(200);
-  echo json_encode(["success" => "delete success"]);
+  echo json_encode(["success" => true, "message" => "delete success"]);
 }

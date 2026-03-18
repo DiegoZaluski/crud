@@ -14,31 +14,26 @@ header("Access-Control-Allow-Methods:" . implode(", ", $allowedMethods));
 header("Access-Control-Allow-Headers:" . implode(", ", $allowedHeaders));
 
 // Detected bot-agent.
-
-
-
+// ...
+//
 // Preflight.
 if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
   http_response_code(204);
   exit;
 }
-// Valid password from acess.
-
-
 
 // Route. 
 $uri = strtok($_SERVER["REQUEST_URI"], "?");
 
-match ($uri) {
-  "/api/operations" => require_once __DIR__ . "/../core/routers.php",
-  default           => notFound(),
-};
+$routers = [
+  "/api/users" => require_once __DIR__ . "/../core/routers.php",
+  // ... 
+];
 
-function notFound(): void {
+if (!array_key_exists($uri, $routers)) {
   http_response_code(404);
   echo json_encode(["error" => "Route not found"]);
   exit;
 }
 
-
-
+$routers[$uri]();

@@ -1,8 +1,9 @@
 <?php 
 require_once __DIR__ . "/../../../data/DBOperations/db.php";
 require_once __DIR__ . "/../../../data/DBOperations/inserts.php";
+require_once __DIR__ . "/util/validations.php";
 
-function post(): void{
+function post(): void {
   /**
    * Inserts a new whitelist into the database.
    *
@@ -24,50 +25,38 @@ function post(): void{
    * 
    * @global $conn dependence intacie of SQLite3.
    */
-  
   global $conn;
-  $boby = file_get_contents("php://input");
 
+  header('Content-Type: application/json');
+
+  $boby = file_get_contents("php://input");
   if (!$boby) {
-    echo json_encode(["error" => "body not found"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "body not found"]);
     return;
   }
-
-  // SANITIZE HERE [CONTINUE]
 
   $data = json_decode($boby, true);
 
   if (!isset($data["name"]) || !isset($data["age"]) || !isset($data["email"])) {
-    echo json_encode(["error" => "name or age or description not found"]);
     http_response_code(400);
+    echo json_encode(["success" => false, "message" => "name or age or email not found"]);
     return;
   }
-
-  if (!is_string($data["name"])) {
-    echo json_encode(["error" => "name must string"]);
-    http_response_code(400);
-    return; 
-  }
-
-  if (!is_numeric($data["age"])) {
-    echo json_encode(["error" => "age must number"]);
-    http_response_code(400);
-    return; 
-  }
-
-  if (!is_string($data["email"])) {
-    echo json_encode(["error" => "email must string"]);
-    http_response_code(400);
-    return; 
-  }
-  $insert = insert($data["name"], $data["age"], $data["email"]);
   
+  if ( 
+    !isValidEmail($data["email"]) ||
+    !isValidAge($data["age"])     ||
+    !isValidName($data["name"])
+  ) { return; } 
+
+  $insert = insert($data["name"], $data["age"], $data["email"]);
   if (!$insert) {
-    echo json_encode(["error" => "Error on insert"]);
     http_response_code(500);
+    echo json_encode(["success" => false, "message" => "Error on insert"]);
     return;
   }
 
-  http_response_code(200);
+  http_response_code(201);
+  echo json_encode(["success" => true,    "message" => "Created"]);
 }

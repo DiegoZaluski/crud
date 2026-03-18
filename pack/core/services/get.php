@@ -17,18 +17,21 @@ function fetchByKey(string $key): void {
    */
   global $conn;
 
+  header('Content-Type: application/json');
+
   $getQuery = $key === "id" 
-  ? query($_GET[$key])
-  : query(null, $_GET[$key]);
+    ? query($_GET[$key])
+    : query(null, $_GET[$key]);
 
   if (!$getQuery) {
     error_log("[SERVICES][GET] Error on query");
     http_response_code(500);
+    echo json_encode(["error" => "query failed"]);
     return;
   }
 
-  echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
   http_response_code(200);
+  echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
 }
 
 function getAll(): bool {
@@ -41,14 +44,17 @@ function getAll(): bool {
    */
   global $conn;
 
+  header('Content-Type: application/json');
+
   $getQuery = queryAll();
 
   if (!$getQuery) {
     error_log("[SERVICES][GET] Error on query");
     http_response_code(500);
+    echo json_encode(["error" => "query failed"]);
     return false;
   }
-  
+
   // echo json_encode($getQuery->fetchArray(SQLITE3_ASSOC));
   // echo json_encode($getQuery->fetchAll(SQLITE3_ASSOC));
   http_response_code(200);
@@ -64,14 +70,15 @@ function get(): void {
    * @throws json_encode of error message if query failed.
    * @throws http_response_code of 500 if query failed.
    */
-  
   global $conn;
+
   if (!isset($_GET["id"]) && !isset($_GET["name"])) {
     if (!getAll()) http_response_code(500);
     return;
   }
 
   $key = isset($_GET["id"]) // test 
-    ? "id" : (isset($_GET["email"])? "email" : "name");
+    ? "id" : (isset($_GET["email"]) ? "email" : "name");
+
   fetchByKey($key);
 }

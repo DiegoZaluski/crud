@@ -11,11 +11,10 @@ if (!$method) {
   exit;
   }
   
-$routers = [
-  "GET"    => get(...),
-  "POST"   => post(...),
-  "PATCH"  => patch(...),
-  "DELETE" => delete(...), 
-];
-
-$routers[$method]();
+match ($method) {
+  "GET" => get(),
+  "POST" => post(),
+  "PATCH" => patch(),
+  "DELETE" => delete(),
+  default => notFound()
+};
